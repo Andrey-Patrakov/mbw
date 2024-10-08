@@ -1,2 +1,2 @@
-# mbw
-My bicycle Warehouse
+# My bicycle Warehouse
+Буду скидывать сюда алгоритмы, которые я написал, чтобы понять как они работают.
