@@ -6,11 +6,11 @@ def mse(y_true, y_pred):
 
 
 def rmse(y_true, y_pred):
-    np.sqrt(np.mean((y_true - y_pred)**2))
+    return np.sqrt(np.mean((y_true - y_pred)**2))
 
 
 def mae(y_true, y_pred):
-    return np.abs(y_true - y_pred)
+    return np.mean(np.abs(y_true - y_pred))
 
 
 def log_loss(y, p):
