@@ -115,8 +115,10 @@ class TreeCutter:
 
 
 class DecisionTree(ABC):
+
     def __init__(self,
                  max_depth=None,
+                 max_features=None,
                  min_samples_leaf=1,
                  max_leaf_count=None,
                  min_impurity_decrease=0.0):
@@ -124,6 +126,7 @@ class DecisionTree(ABC):
         self._tree = None
         self._leaf_count = 0
 
+        self._max_features = max_features
         self._min_samples_leaf = min_samples_leaf
         self._max_leaf_count = max_leaf_count
         self._min_impurity_decrease = min_impurity_decrease
@@ -132,6 +135,14 @@ class DecisionTree(ABC):
             self._max_depth = inf
         else:
             self._max_depth = max(max_depth - 1, 0)
+
+        if type(self._max_features) is str:
+            allowed_feat = ['sqrt',]
+            self._max_features = self._max_features.lower()
+            if self._max_features not in allowed_feat:
+                raise ValueError(
+                    f"Unknown value {self._max_features} for max_features!"
+                )
 
     @abstractmethod
     def _criterion(self, labels):
@@ -185,7 +196,7 @@ class DecisionTree(ABC):
         best_gain, best_t, best_index = 0, None, None
 
         h = self._criterion(labels)
-        for index in range(data.shape[1]):
+        for index in self._get_features(data.shape[1]):
 
             for t in np.unique(data[:, index]):
                 _, _, left_labels, right_labels = self._split(
@@ -212,6 +223,28 @@ class DecisionTree(ABC):
         left = np.where(data[:, index] <= t)
         right = np.where(data[:, index] > t)
         return data[left], data[right], labels[left], labels[right]
+
+    def _get_features(self, data_len):
+        if self._max_features is None:
+            n_feat = data_len
+
+        elif type(self._max_features) is str:
+            if self._max_features == 'sqrt':
+                n_feat = int(np.sqrt(data_len))
+
+        elif type(self._max_features) is float:
+            n_feat = int(data_len * self._max_features)
+            n_feat = min(n_feat, data_len)
+
+        else:
+            n_feat = int(self._max_features)
+
+        n_feat = max(n_feat, 1)
+        n_feat = min(n_feat, data_len)
+
+        indexes = np.arange(data_len)
+        np.random.shuffle(indexes)
+        return indexes[:n_feat]
 
     def _print_tree(self, node, spacing=""):
         text = ''
