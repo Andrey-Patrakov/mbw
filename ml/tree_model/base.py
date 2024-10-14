@@ -234,7 +234,6 @@ class DecisionTree(ABC):
 
         elif type(self._max_features) is float:
             n_feat = int(data_len * self._max_features)
-            n_feat = min(n_feat, data_len)
 
         else:
             n_feat = int(self._max_features)
