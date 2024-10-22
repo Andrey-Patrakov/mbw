@@ -1,11 +1,7 @@
 import numpy as np
 
 
-def bias(y, z):
-    return -2 * (z - y)
-
-
-class Boosting:
+class BoostingRegressor:
 
     def __init__(self,
                  estimator=None,
@@ -25,6 +21,10 @@ class Boosting:
         self._estimator_coefs = estimator_coefs
         self._estimator_args = kwargs
 
+    def _bias(self, X, y):
+        z = self.predict(X)
+        return -2 * (z - y)
+
     def fit(self, X, y):
         np.random.seed(self._random_state)
         X, y = np.array(X), np.array(y)
@@ -38,8 +38,7 @@ class Boosting:
             if len(self._estimators) == 0:
                 estimator.fit(X, y)
             else:
-                z = self.predict(X)
-                estimator.fit(X, bias(y, z))
+                estimator.fit(X, self._bias(X, y))
 
             self._estimators.append(estimator)
 
