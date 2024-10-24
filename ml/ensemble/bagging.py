@@ -44,7 +44,9 @@ class Bagging:
         oob_values = {}
         self._estimators = []
 
-        np.random.seed(self._random_state)
+        if self._random_state is not None:
+            np.random.seed(int(self._random_state))
+
         X, y = np.array(X), np.array(y)
         for _ in range(self._n_estimators):
             data, labels, oob = self._get_bootstrap(X, y)

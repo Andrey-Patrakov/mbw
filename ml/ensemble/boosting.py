@@ -26,7 +26,9 @@ class BoostingRegressor:
         return -2 * (z - y)
 
     def fit(self, X, y):
-        np.random.seed(self._random_state)
+        if self._random_state is not None:
+            np.random.seed(int(self._random_state))
+
         X, y = np.array(X), np.array(y)
 
         if self._estimator_coefs is None:

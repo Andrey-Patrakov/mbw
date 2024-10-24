@@ -22,7 +22,9 @@ class BatchLoader:
                 error += f' ({self._dataset.shape[0]} != {self._y.shape[0]})'
                 raise ValueError(error)
 
-        np.random.seed(random_state)
+        if random_state is not None:
+            np.random.seed(int(random_state))
+
         if shuffle:
             np.random.shuffle(self._indexes)
 

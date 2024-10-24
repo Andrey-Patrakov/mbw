@@ -23,7 +23,7 @@ class LinearModel(ABC):
         self._max_iter = max_iter
 
         self._w = class_weight
-        self._seed = random_state
+        self._random_state = random_state
         self._fit_intercept = fit_intercept
         self._data_prepared = False
 
@@ -86,7 +86,9 @@ class LinearModel(ABC):
 
     def _init_weights(self, size):
         if self._w is None:
-            np.random.seed(self._seed)
+            if self._random_state is not None:
+                np.random.seed(int(self._random_state))
+
             self._w = np.random.rand(size)
             self.clear_history()
 
