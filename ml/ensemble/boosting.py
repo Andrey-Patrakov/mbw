@@ -1,4 +1,5 @@
 import numpy as np
+from mbw.ml.utils.train_test_split import train_test_split
 
 
 class BoostingRegressor:
@@ -9,6 +10,7 @@ class BoostingRegressor:
                  n_estimators=100,
                  random_state=None,
                  estimator_coefs=None,
+                 subsample=1.0,
                  **kwargs) -> None:
 
         self._estimators = []
@@ -19,6 +21,7 @@ class BoostingRegressor:
         self._n_estimators = n_estimators
         self._random_state = random_state
         self._estimator_coefs = estimator_coefs
+        self._subsample = subsample
         self._estimator_args = kwargs
 
     def _bias(self, X, y):
@@ -37,10 +40,13 @@ class BoostingRegressor:
         for _ in range(self._n_estimators):
             estimator = self._estimator(**self._estimator_args)
 
+            data = train_test_split(X, y, train_size=self._subsample)
+            X_train, _, y_train, _ = data
+
             if len(self._estimators) == 0:
-                estimator.fit(X, y)
+                estimator.fit(X_train, y_train)
             else:
-                estimator.fit(X, self._bias(X, y))
+                estimator.fit(X_train, self._bias(X_train, y_train))
 
             self._estimators.append(estimator)
 
