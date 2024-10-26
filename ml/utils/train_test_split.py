@@ -15,8 +15,8 @@ def train_test_split(*arrays,
 
         train_size = 1 - test_size
 
-    train_size = max(test_size, 0)
-    train_size = min(test_size, 1)
+    train_size = max(train_size, 0)
+    train_size = min(train_size, 1)
     indexes = np.arange(len(arrays[0]))
 
     if random_state is not None:
