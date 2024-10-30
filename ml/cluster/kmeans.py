@@ -32,18 +32,18 @@ class KMeans:
         self._histoty.append(self._centroids.copy())
 
         for _ in range(self._max_iter):
-            print(_)
             distances = np.apply_along_axis(self._get_distances, 1, X)
             closest = distances.argmin(axis=1)
 
-            old_centroids = self._centroids.copy()
             for centroid in range(self._n_clusters):
                 if any(closest == centroid):
-                    self._centroids[centroid] = np.mean(X[closest == centroid])
+                    self._centroids[centroid] = np.mean(
+                        X[closest == centroid], axis=0
+                    )
 
+            old_centroids = self._histoty[-1]
             self._histoty.append(self._centroids.copy())
-            tol_distances = euclidean(old_centroids, self._centroids)
-            if max(tol_distances) < self._tol:
+            if max(euclidean(old_centroids, self._centroids)) < self._tol:
                 break
 
         return self.history
