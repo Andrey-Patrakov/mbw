@@ -1,0 +1,18 @@
+import numpy as np
+
+
+class Linear:
+
+    def __init__(self, in_features: int, out_features: int):
+        self._in_features = in_features
+        self._out_features = out_features
+
+        self._w = 2 * np.random.random((in_features, out_features)) - 1
+
+    def forward(self, x):
+        self._cache = x
+        return x @ self._w
+
+    def backward(self, error, lr):
+        self._w += self._cache.T @ error * lr
+        return error @ self._w.T
