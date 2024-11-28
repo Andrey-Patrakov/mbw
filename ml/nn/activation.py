@@ -23,7 +23,7 @@ class Activation(ABC):
         return self._cache
 
     def backward(self, error, lr=None):
-        return error
+        return error * self.deriv(self._cache)
 
 
 class ReLU(Activation):
@@ -33,3 +33,12 @@ class ReLU(Activation):
 
     def deriv(self, x):
         return x > 0
+
+
+class Sigmoid(Activation):
+
+    def call(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def deriv(self, x):
+        return self.call(x) * (1 - self.call(x))
