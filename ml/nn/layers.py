@@ -1,7 +1,19 @@
 import numpy as np
+from abc import ABC, abstractmethod
 
 
-class Linear:
+class Layer(ABC):
+
+    @abstractmethod
+    def forward(self, x):
+        pass
+
+    @abstractmethod
+    def backward(self, error, lr):
+        pass
+
+
+class Linear(Layer):
 
     def __init__(self, in_features: int, out_features: int):
         self._in_features = in_features
