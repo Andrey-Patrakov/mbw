@@ -29,7 +29,7 @@ class Activation(ABC):
 class ReLU(Activation):
 
     def call(self, x):
-        return 1 / (1 + np.exp(-x))
+        return np.maximum(0, x)
 
     def deriv(self, x):
         return x > 0
