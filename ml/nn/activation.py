@@ -35,6 +35,21 @@ class ReLU(Activation):
         return x > 0
 
 
+class LeakyReLU(Activation):
+
+    def __init__(self, alpha=0.03) -> None:
+        super().__init__()
+        self._alpha = alpha
+
+    def call(self, x):
+        return np.maximum(self._alpha * x, x)
+
+    def deriv(self, x):
+        dx = np.ones_like(x)
+        dx[x < 0] = self._alpha
+        return dx
+
+
 class Sigmoid(Activation):
 
     def call(self, x):
@@ -42,3 +57,12 @@ class Sigmoid(Activation):
 
     def deriv(self, x):
         return self.call(x) * (1 - self.call(x))
+
+
+class Tanh(Activation):
+
+    def call(self, x):
+        return (2 / (1 + np.exp(-2 * x))) - 1
+
+    def deriv(self, x):
+        return 1 - self.call(x)**2
