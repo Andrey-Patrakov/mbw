@@ -53,7 +53,7 @@ class LeakyReLU(Activation):
 class Sigmoid(Activation):
 
     def call(self, x):
-        return 1 / (1 + np.exp(-x))
+        return 1 / (1 + np.exp(np.minimum(-x, 50.0)))
 
     def deriv(self, x):
         return self.call(x) * (1 - self.call(x))
@@ -62,7 +62,7 @@ class Sigmoid(Activation):
 class Tanh(Activation):
 
     def call(self, x):
-        return (2 / (1 + np.exp(-2 * x))) - 1
+        return (2 / (1 + np.exp(np.minimum(-2 * x, 50.0)))) - 1
 
     def deriv(self, x):
         return 1 - self.call(x)**2
