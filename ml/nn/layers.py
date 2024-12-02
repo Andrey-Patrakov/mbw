@@ -12,15 +12,22 @@ class Layer(ABC):
     def backward(self, error, lr):
         pass
 
+    @abstractmethod
+    def init_weights(self):
+        pass
+
 
 class Linear(Layer):
 
     def __init__(self, in_features: int, out_features: int):
         self._in_features = in_features
         self._out_features = out_features
+        self.init_weights()
 
-        self._w = 2 * np.random.random((in_features, out_features)) - 1
-        self._b = 2 * np.random.random((1, out_features)) - 1
+    def init_weights(self):
+        self._w = 2 * np.random.random((self._in_features,
+                                        self._out_features)) - 1
+        self._b = 2 * np.random.random((1, self._out_features)) - 1
 
     def forward(self, x):
         self._cache = x

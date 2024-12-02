@@ -12,17 +12,20 @@ class NeuralNetwork:
         self._lr = learning_rate
         self._random_seed = random_seed
         self._v_callback = verbose_callback
+        self._fited = False
 
     def add(self, layer: Layer):
         self._layers.append(layer)
 
     def forward(self, x):
+        x = np.array(x)
         for layer in self._layers:
             x = layer.forward(x)
 
         return x
 
     def backward(self, error, lr):
+        error = np.array(error)
         for layer in self._layers[::-1]:
             error = layer.backward(error, lr)
 
@@ -30,8 +33,11 @@ class NeuralNetwork:
 
     def fit(self, x, y, epochs, learning_rate=None):
         lr = learning_rate if learning_rate else self._lr
-        if self._random_seed is not None:
+        if self._random_seed is not None and not self._fited:
             np.random.seed(self._random_seed)
+            for layer in self._layers:
+                if isinstance(layer, Layer):
+                    layer.init_weights()
 
         history = {
             'epoch': [],
